@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dear ❤️ Buri!</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+  overflow:hidden;
+  background: radial-gradient(circle at bottom,#0f2027,#203a43,#2c5364);
+  font-family:Segoe UI, sans-serif;
+  color:white;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Stars */
+.star{
+  position:fixed;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  animation:twinkle 3s infinite alternate;
+}
+@keyframes twinkle{from{opacity:.2}to{opacity:1}}
+
+.moon{
+  position:fixed;
+  top:60px;
+  right:80px;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle,#fff,#ddd);
+  border-radius:50%;
+  box-shadow:0 0 60px rgba(255,255,255,.6);
+}
+
+.proposal-card{
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(25px);
+  border-radius:30px;
+  box-shadow:0 20px 80px rgba(0,0,0,.5);
+}
+
+/* Button container */
+.button-container {
+  position: relative;
+  width: 100%;
+  min-height: 80px;
+  margin-top: 20px;
+}
+
+/* YES */
+#yesBtn{
+  background:linear-gradient(45deg,#ff416c,#ff4b2b);
+  box-shadow:0 15px 40px rgba(255,60,120,.6);
+  transition:.3s;
+  position: relative;
+  z-index: 10;
+}
+#yesBtn:hover{transform:scale(1.1)}
+
+/* REAL NO */
+.no-real{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(50%);
+  background:linear-gradient(45deg,#ff9a9e,#fad0c4);
+  box-shadow:0 10px 25px rgba(255,0,100,.6);
+  cursor:pointer;
+  transition:left .18s ease-out, top .18s ease-out;
+  z-index: 9999;
+}
+
+/* FAKE NO */
+.no-fake{
+  position:fixed;
+  z-index:9998;
+  background:linear-gradient(45deg,#ffd1ff,#fad0c4);
+  opacity:.85;
+  pointer-events: auto;
+}
+
+/* Effects */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:22px;
+  animation:floatUp 6s linear infinite;
+  z-index: 1;
+}
+@keyframes floatUp{to{transform:translateY(-110vh);opacity:0}}
+
+.petal{
+  position:fixed;
+  top:-20px;
+  font-size:18px;
+  animation:petalFall linear forwards;
+  z-index: 1;
+}
+@keyframes petalFall{to{transform:translateY(110vh) rotate(360deg)}}
+
+.confetti{
+  position:fixed;
+  top:-10px;
+  font-size:20px;
+  animation:confettiFall linear forwards;
+  z-index: 1;
+}
+@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+@keyframes shake{
+  0%{transform:translate(0)}
+  20%{transform:translate(-10px,5px)}
+  40%{transform:translate(10px,-5px)}
+  60%{transform:translate(-8px,4px)}
+  80%{transform:translate(8px,-4px)}
+  100%{transform:translate(0)}
+}
+.shake{animation:shake .6s}
+
+/* Success message */
+.success-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 10000;
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Log viewer (hidden by default) */
+.log-viewer {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 300px;
+  z-index: 10001;
+  display: none;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.log-viewer h3 {
+  margin: 0 0 10px 0;
+  color: #ff416c;
+}
+.log-entry {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 5px 0;
+  font-family: monospace;
+}
+</style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen">
+
+<div class="moon"></div>
+
+<!-- Log viewer (press L to toggle) -->
+<div id="logViewer" class="log-viewer">
+  <h3>💖 Proposal Logs</h3>
+  <div id="logContent"></div>
+</div>
+
+<div class="proposal-card p-12 text-center max-w-xl z-15">
+  <h1 class="text-pink-300 tracking-widest mb-3">HEY! ❤️ KONKA</h1>
+  <p class="text-xl mb-10">I Love You... ❤️</p>
+  <h1 class="text-5xl font-bold mb-6">Will You Marry Me?</h1>
+  
+
+  <div class="button-container">
+    <button id="yesBtn" class="px-10 py-4 rounded-2xl text-xl">Yes ❤️</button>
+    <button id="noBtn" class="no-real px-10 py-4 rounded-2xl text-xl">No 🙈😂</button>
+  </div>
+</div>
+
+<!-- Success Message (shown when Yes is clicked) -->
+<div id="successMessage" class="success-message">
+  <h2 class="text-4xl font-bold text-pink-400 mb-4">YAY! 💍</h2>
+  <p class="text-2xl mb-6">You made me the happiest person! 💖</p>
+  <p class="text-xl">Loading our love story...</p>
+</div>
+
+<script>
+/* ===== LOGGING SYSTEM ===== */
+class ProposalLogger {
+  constructor() {
+    this.sessionId = 'proposal_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    this.logs = [];
+    this.startTime = Date.now();
+    this.yesClicks = 0;
+    this.noClicks = 0;
+    this.fakeNoClicks = 0;
+    this.hasMadeDecision = false;
+    this.initializeLogs();
+  }
+
+  initializeLogs() {
+    // Load existing logs from localStorage
+    const savedLogs = localStorage.getItem('proposalLogs');
+    if (savedLogs) {
+      this.logs = JSON.parse(savedLogs);
+    }
+    
+    // Log page visit
+    this.logEvent('PAGE_VISIT', {
+      timestamp: new Date().toISOString(),
+      sessionId: this.sessionId,
+      userAgent: navigator.userAgent,
+      screenSize: `${window.innerWidth}x${window.innerHeight}`,
+      referrer: document.referrer || 'direct'
+    });
+    
+    // Set up beforeunload to track exit
+    window.addEventListener('beforeunload', () => this.handlePageExit());
+  }
+
+  logEvent(type, data) {
+    const logEntry = {
+      sessionId: this.sessionId,
+      type: type,
+      timestamp: new Date().toISOString(),
+      timeOnPage: Date.now() - this.startTime,
+      ...data
+    };
+    
+    this.logs.push(logEntry);
+    
+    // Save to localStorage
+    localStorage.setItem('proposalLogs', JSON.stringify(this.logs));
+    
+    // Log to console for debugging
+    console.log(`💖 Proposal Log: ${type}`, logEntry);
+    
+    // Update log viewer if visible
+    this.updateLogViewer();
+    
+    // Optional: Send to server (uncomment if you have a server endpoint)
+    // this.sendToServer(logEntry);
+  }
+
+  logYesClick() {
+    this.yesClicks++;
+    this.hasMadeDecision = true;
+    this.logEvent('YES_CLICK', {
+      clickCount: this.yesClicks,
+      totalNoClicks: this.noClicks,
+      totalFakeNoClicks: this.fakeNoClicks,
+      finalDecision: 'YES'
+    });
+  }
+
+  logNoClick() {
+    this.noClicks++;
+    this.logEvent('NO_CLICK', {
+      clickCount: this.noClicks,
+      attemptNumber: this.noClicks,
+      buttonText: document.getElementById('noBtn').innerText
+    });
+  }
+
+  logFakeNoClick() {
+    this.fakeNoClicks++;
+    this.logEvent('FAKE_NO_CLICK', {
+      clickCount: this.fakeNoClicks,
+      totalRealNoClicks: this.noClicks
+    });
+  }
+
+  logButtonHover(buttonType) {
+    this.logEvent('BUTTON_HOVER', {
+      buttonType: buttonType
+    });
+  }
+
+  logEscapeMove() {
+    this.logEvent('ESCAPE_MOVE', {
+      noClickCount: this.noClicks
+    });
+  }
+
+  handlePageExit() {
+    const timeSpent = Date.now() - this.startTime;
+    const decisionMade = this.hasMadeDecision ? (this.yesClicks > 0 ? 'YES' : 'NO_CLICKS_ONLY') : 'NO_DECISION';
+    
+    this.logEvent('PAGE_EXIT', {
+      timeSpentMs: timeSpent,
+      timeSpentFormatted: this.formatTime(timeSpent),
+      yesClicks: this.yesClicks,
+      noClicks: this.noClicks,
+      fakeNoClicks: this.fakeNoClicks,
+      decision: decisionMade,
+      exitType: 'normal'
+    });
+  }
+
+  formatTime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${remainingSeconds}s`;
+  }
+
+  updateLogViewer() {
+    const logContent = document.getElementById('logContent');
+    if (!logContent) return;
+    
+    // Show last 10 logs
+    const recentLogs = this.logs.slice(-10);
+    logContent.innerHTML = recentLogs.map(log => `
+      <div class="log-entry">
+        <strong>${new Date(log.timestamp).toLocaleTimeString()}</strong><br/>
+        ${this.getLogDescription(log)}
+      </div>
+    `).join('');
+  }
+
+  getLogDescription(log) {
+    switch(log.type) {
+      case 'PAGE_VISIT': return '📱 Page visited';
+      case 'YES_CLICK': return `💍 YES clicked! (${log.clickCount}x)`;
+      case 'NO_CLICK': return `😜 NO clicked (Attempt ${log.attemptNumber})`;
+      case 'FAKE_NO_CLICK': return `👻 Fake NO clicked`;
+      case 'BUTTON_HOVER': return `🖱️ Hovered over ${log.buttonType}`;
+      case 'ESCAPE_MOVE': return `🏃‍♂️ NO button escaped`;
+      case 'PAGE_EXIT': return `🚪 Page exit (${log.timeSpentFormatted}, ${log.decision})`;
+      default: return log.type;
+    }
+  }
+
+  getStats() {
+    return {
+      totalSessions: this.logs.filter(l => l.type === 'PAGE_VISIT').length,
+      yesDecisions: this.logs.filter(l => l.type === 'YES_CLICK' && l.data?.finalDecision === 'YES').length,
+      totalNoClicks: this.noClicks,
+      totalFakeNoClicks: this.fakeNoClicks
+    };
+  }
+
+  // Optional: Send logs to server
+  sendToServer(logEntry) {
+    // Replace with your actual server endpoint
+    fetch('https://your-server.com/log-proposal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logEntry)
+    }).catch(err => console.log('Server logging failed:', err));
+  }
+}
+
+// Initialize logger
+const logger = new ProposalLogger();
+
+/* ===== MAIN APPLICATION ===== */
+
+/* Initialize stars */
+for(let i=0;i<140;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.left=Math.random()*100+'vw';
+  s.style.top=Math.random()*100+'vh';
+  document.body.appendChild(s);
+}
+
+const realNo = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const successMessage = document.getElementById('successMessage');
+const logViewer = document.getElementById('logViewer');
+
+let escapeLevel = 1;
+let currentFakeNo = null; // Track current fake NO button
+let fakeNoTimeout = null; // Timeout for fake NO removal
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+
+/* Initialize No button position */
+function initializeNoButton() {
+  const container = document.querySelector('.button-container');
+  const containerRect = container.getBoundingClientRect();
+  const buttonWidth = realNo.offsetWidth;
+  
+  // Position at right side of container
+  realNo.style.left = (containerRect.width - buttonWidth + 50) + 'px';
+  realNo.style.top = '0px';
+}
+
+window.addEventListener('load', initializeNoButton);
+setTimeout(initializeNoButton, 100);
+
+/* Smart escape - ONLY ONE NO BUTTON AT A TIME */
+function moveNoSmart(px,py){
+  const r = realNo.getBoundingClientRect();
+  const padding = 20;
+
+  const dx = r.left + r.width/2 - px;
+  const dy = r.top  + r.height/2 - py;
+
+  const speed = 90 + escapeLevel * 18;
+
+  let nx = r.left - Math.sign(dx) * speed;
+  let ny = r.top - Math.sign(dy) * speed;
+
+  nx = clamp(nx,padding,innerWidth - r.width - padding);
+  ny = clamp(ny,padding,innerHeight - r.height - padding);
+
+  realNo.style.left = nx + 'px';
+  realNo.style.top  = ny + 'px';
+
+  escapeLevel++;
+  taunt();
+  
+  // Only spawn fake NO if there isn't one already
+  if (!currentFakeNo) {
+    spawnFakeNo();
+  }
+  
+  // Log escape move
+  logger.logEscapeMove();
+}
+
+/* Desktop mouse tracking */
+document.addEventListener('mousemove',e=>{
+  const r = realNo.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top  + r.height/2;
+  if(Math.hypot(e.clientX-cx,e.clientY-cy) < 180){
+    moveNoSmart(e.clientX,e.clientY);
+  }
+});
+
+/* Mobile touch tracking */
+document.addEventListener('touchmove',e=>{
+  const t=e.touches[0];
+  const r = realNo.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top  + r.height/2;
+  if(Math.hypot(t.clientX-cx,t.clientY-cy) < 180){
+    moveNoSmart(t.clientX,t.clientY);
+  }
+},{passive:true});
+
+/* Taunts */
+function taunt(){
+  const taunts = [
+    'NOPE 😝',
+    'Too slow 😂',
+    'Almost 😈',
+    'Try again 🤭',
+    'Catch me! 🏃‍♂️',
+    'Missed! 😜',
+    'So close! 👻'
+  ];
+  realNo.innerText = taunts[Math.floor(Math.random()*taunts.length)];
+}
+
+/* Spawn ONLY ONE fake NO button */
+function spawnFakeNo(){
+  // Remove any existing fake NO
+  if (currentFakeNo && currentFakeNo.parentNode) {
+    currentFakeNo.remove();
+    clearTimeout(fakeNoTimeout);
+  }
+  
+  // Create new fake NO
+  const f=document.createElement('button');
+  f.className='no-fake px-8 py-3 rounded-2xl text-lg';
+  const fakeTexts=['No 😜','No 🤣','No 😈','No way 😎','Nah 😝'];
+  f.innerText=fakeTexts[Math.floor(Math.random()*fakeTexts.length)];
+  
+  // Position away from real NO
+  const r = realNo.getBoundingClientRect();
+  let fx, fy;
+  
+  // Try to position opposite side of mouse/cursor
+  do {
+    fx = Math.random()*(innerWidth-200);
+    fy = Math.random()*(innerHeight-100);
+  } while (Math.abs(fx - r.left) < 150 && Math.abs(fy - r.top) < 150);
+  
+  f.style.left = fx + 'px';
+  f.style.top = fy + 'px';
+  
+  document.body.appendChild(f);
+  currentFakeNo = f;
+
+  f.addEventListener('mouseenter',()=>{
+    const missTexts=['Missed 😝','Nope 😂','Haha 😎','Oops! 🤣','Too late! 😜'];
+    f.innerText=missTexts[Math.floor(Math.random()*missTexts.length)];
+    
+    // Move fake NO to new position
+    do {
+      f.style.left=Math.random()*(innerWidth-200)+'px';
+      f.style.top=Math.random()*(innerHeight-100)+'px';
+    } while (Math.abs(parseInt(f.style.left) - r.left) < 100 && 
+             Math.abs(parseInt(f.style.top) - r.top) < 100);
+    
+    // Log fake no hover
+    logger.logFakeNoClick();
+  });
+
+  f.addEventListener('click',()=>{
+    // Log fake no click
+    logger.logFakeNoClick();
+    f.remove();
+    currentFakeNo = null;
+    clearTimeout(fakeNoTimeout);
+  });
+
+  // Auto-remove after 3 seconds
+  fakeNoTimeout = setTimeout(()=>{
+    if(f.parentNode){
+      f.remove();
+      currentFakeNo = null;
+    }
+  },3000);
+}
+
+/* Hearts animation */
+setInterval(()=>{
+  const h=document.createElement('div');
+  h.className='heart';
+  h.innerHTML='❤️';
+  h.style.left=Math.random()*100+'vw';
+  document.body.appendChild(h);
+  setTimeout(()=>{
+    if(h.parentNode){
+      h.remove();
+    }
+  },6000);
+},400);
+
+/* Petals animation */
+function petal(){
+  const p=document.createElement('div');
+  p.className='petal';
+  const petals=['🌸','🌺','🌹','💐','🌷'];
+  p.innerHTML=petals[Math.floor(Math.random()*petals.length)];
+  p.style.left=Math.random()*100+'vw';
+  p.style.animationDuration=(Math.random()*3+4)+'s';
+  document.body.appendChild(p);
+  setTimeout(()=>{
+    if(p.parentNode){
+      p.remove();
+    }
+  },7000);
+}
+
+/* Confetti animation */
+function confetti(){
+  for(let i=0;i<120;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    const confettiItems=['🎉','💖','✨','💍','🎊','💕','💎'];
+    c.innerHTML=confettiItems[Math.floor(Math.random()*confettiItems.length)];
+    c.style.left=Math.random()*100+'vw';
+    c.style.animationDuration=(Math.random()*2+3)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>{
+      if(c.parentNode){
+        c.remove();
+      }
+    },5000);
+  }
+}
+
+/* Button event listeners */
+
+// YES button click
+yesBtn.addEventListener('click',()=>{
+  // Log yes click
+  logger.logYesClick();
+  
+  // Remove any fake NO button
+  if (currentFakeNo && currentFakeNo.parentNode) {
+    currentFakeNo.remove();
+    currentFakeNo = null;
+    clearTimeout(fakeNoTimeout);
+  }
+  
+  // Show success message
+  successMessage.style.display = 'block';
+  
+  // Add shake effect
+  document.body.classList.add('shake');
+  
+  // Start celebrations
+  confetti();
+  for(let i=0;i<100;i++) setTimeout(petal,i*50);
+  
+  // Create multiple heart bursts
+  for(let j=0;j<5;j++){
+    setTimeout(()=>{
+      for(let i=0;i<30;i++){
+        const h=document.createElement('div');
+        h.className='heart';
+        h.innerHTML='💖';
+        h.style.left=Math.random()*100+'vw';
+        h.style.fontSize = (Math.random()*10+20)+'px';
+        document.body.appendChild(h);
+        setTimeout(()=>{
+          if(h.parentNode){
+            h.remove();
+          }
+        },5000);
+      }
+    },j*500);
+  }
+  
+  // Remove shake effect after animation
+  setTimeout(()=>{
+    document.body.classList.remove('shake');
+  },600);
+  
+  // Redirect after celebration
+  setTimeout(()=>{
+    // You can replace this with your actual love.html page
+    window.location.href = './love.html';
+  },4200);
+});
+
+// NO button click (if somehow caught!)
+realNo.addEventListener('click',()=>{
+  // Log no click
+  logger.logNoClick();
+  
+  // Move button away immediately
+  const padding = 20;
+  const r = realNo.getBoundingClientRect();
+  realNo.style.left = Math.random()*(innerWidth - r.width - 2*padding) + padding + 'px';
+  realNo.style.top = Math.random()*(innerHeight - r.height - 2*padding) + padding + 'px';
+  
+  // Remove any existing fake NO
+  if (currentFakeNo && currentFakeNo.parentNode) {
+    currentFakeNo.remove();
+    currentFakeNo = null;
+    clearTimeout(fakeNoTimeout);
+  }
+  
+  // Spawn ONE new fake NO
+  setTimeout(spawnFakeNo, 300);
+});
+
+// Button hover logging
+yesBtn.addEventListener('mouseenter',() => logger.logButtonHover('YES'));
+realNo.addEventListener('mouseenter',() => logger.logButtonHover('REAL_NO'));
+
+/* Keyboard shortcuts for viewing logs */
+document.addEventListener('keydown', (e) => {
+  // Press 'L' to toggle log viewer
+  if (e.key === 'l' || e.key === 'L') {
+    logViewer.style.display = logViewer.style.display === 'block' ? 'none' : 'block';
+    logger.updateLogViewer();
+  }
+  
+  // Press 'S' to show stats in console
+  if (e.key === 's' || e.key === 'S') {
+    console.log('📊 Proposal Statistics:', logger.getStats());
+    alert(`💖 Proposal Stats:
+    Total Sessions: ${logger.getStats().totalSessions}
+    Yes Decisions: ${logger.getStats().yesDecisions}
+    No Clicks: ${logger.getStats().totalNoClicks}
+    Fake No Clicks: ${logger.getStats().totalFakeNoClicks}
+    
+    Check console for detailed logs!`);
+  }
+  
+  // Press 'C' to clear fake NO (for testing)
+  if (e.key === 'c' || e.key === 'C') {
+    if (currentFakeNo && currentFakeNo.parentNode) {
+      currentFakeNo.remove();
+      currentFakeNo = null;
+      clearTimeout(fakeNoTimeout);
+      console.log('🧹 Cleared fake NO button');
+    }
+  }
+});
+
+// Prevent right click
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// Clean up on page exit
+window.addEventListener('beforeunload', () => {
+  if (currentFakeNo && currentFakeNo.parentNode) {
+    currentFakeNo.remove();
+  }
+  clearTimeout(fakeNoTimeout);
+});
+
+// Show a message about logging in console
+console.log('💖 Proposal logging active!');
+console.log('Press L to view logs, S for statistics, C to clear fake NO');
+</script>
+
+</body>
+</html>
