@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Love Story ❤️</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body {
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.heart {
+  position: fixed;
+  font-size: 24px;
+  animation: float 5s linear infinite;
+  z-index: 1;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+.message {
+  animation: fadeIn 1s ease-in;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sparkle {
+  position: fixed;
+  font-size: 20px;
+  animation: sparkleFloat 4s linear infinite;
+}
+@keyframes sparkleFloat {
+  0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+  20% { opacity: 1; transform: translateY(80vh) rotate(90deg) scale(1); }
+  80% { opacity: 1; transform: translateY(20vh) rotate(180deg) scale(1); }
+  100% { transform: translateY(-100px) rotate(360deg) scale(0.5); opacity: 0; }
+}
+</style>
+</head>
+<body class="flex items-center justify-center">
+  <div class="text-center p-8 max-w-2xl message">
+    <h1 class="text-6xl font-bold mb-6 animate-pulse">🤦🏻‍♂️ ❤️ Konka🤦🏻‍♀️</h1>
+    <p class="text-3xl mb-8">Forever Together 💍</p>
+    
+    <div class="bg-white/20 backdrop-blur-lg rounded-3xl p-10 shadow-2xl border border-white/30">
+      <div class="mb-8">
+        <p class="text-2xl mb-6">"The best thing to hold onto in life is each other."</p>
+        <p class="text-xl mb-2">You said YES! 💖</p>
+        <p class="text-lg text-pink-200">This is just the beginning of our beautiful journey...</p>
+      </div>
+      
+      <div class="mb-10 p-6 bg-gradient-to-r from-pink-500/20 to-red-500/20 rounded-2xl">
+        <h3 class="text-2xl font-bold mb-4">Our Promise</h3>
+        <div class="space-y-3 text-left">
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">💖</span>
+            <span>To love each other every single day</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">🤝</span>
+            <span>To support each other's dreams</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">😊</span>
+            <span>To laugh together through life</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">🌈</span>
+            <span>To create beautiful memories together</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="space-y-4">
+        <p class="text-xl font-semibold">Ready to start our forever?</p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="index.html" class="inline-block bg-white text-pink-600 px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform shadow-lg hover:shadow-xl">
+            💖 Relive the Proposal
+          </a>
+          
+          <button onclick="showSurprise()" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform shadow-lg hover:shadow-xl">
+            💌 Surprise Message
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Surprise Message Modal -->
+    <div id="surpriseModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+      <div class="bg-gradient-to-br from-pink-400 to-red-500 p-8 rounded-3xl max-w-md mx-4 animate-bounce">
+        <div class="text-center">
+          <h3 class="text-3xl font-bold mb-4">💝 My Promise to You</h3>
+          <p class="text-lg mb-6">
+            Konka🤦🏻‍♀️ I promise to cherish you, respect you, and love you more with each passing day. 
+            You are my everything. I can't wait to spend forever with you! 
+          </p>
+          <p class="text-xl font-bold mb-6">With all my love,<br>🤦🏻‍♂️ 💖</p>
+          <button onclick="closeSurprise()" class="bg-white text-pink-600 px-6 py-3 rounded-full font-bold hover:scale-105 transition-transform">
+            Close 💖
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Create floating hearts
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      const hearts = ['❤️', '💖', '💕', '💗', '💓', '💞'];
+      heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (Math.random() * 25 + 25) + 'px';
+      heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }, 200);
+    
+    // Create sparkles
+    setInterval(() => {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      const sparkles = ['✨', '🌟', '💫', '⭐', '🎉'];
+      sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.left = Math.random() * 100 + 'vw';
+      sparkle.style.fontSize = (Math.random() * 15 + 15) + 'px';
+      sparkle.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 5000);
+    }, 500);
+    
+    // Surprise message functions
+    function showSurprise() {
+      const modal = document.getElementById('surpriseModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Add confetti effect
+      for(let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.innerHTML = ['💖', '💕', '✨', '💍'][Math.floor(Math.random() * 4)];
+          confetti.style.position = 'fixed';
+          confetti.style.fontSize = '20px';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.top = '-50px';
+          confetti.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => {
+            if(confetti.parentNode) confetti.remove();
+          }, 3000);
+        }, i * 50);
+      }
+      
+      // Add CSS for falling animation
+      if(!document.querySelector('#fallStyle')) {
+        const style = document.createElement('style');
+        style.id = 'fallStyle';
+        style.textContent = `
+          @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+    
+    function closeSurprise() {
+      const modal = document.getElementById('surpriseModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('surpriseModal').addEventListener('click', function(e) {
+      if(e.target === this) closeSurprise();
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if(e.key === 'Escape') closeSurprise();
+    });
+    
+    // Add initial celebration when page loads
+    window.addEventListener('load', function() {
+      // Add some initial confetti
+      for(let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.innerHTML = '💖';
+          heart.style.position = 'fixed';
+          heart.style.fontSize = '30px';
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.top = Math.random() * 100 + 'vh';
+          heart.style.animation = 'float 3s linear forwards';
+          document.body.appendChild(heart);
+          
+          setTimeout(() => {
+            if(heart.parentNode) heart.remove();
+          }, 3000);
+        }, i * 100);
+      }
+      
+      // Play romantic sound (optional)
+      console.log('💖 Love page loaded! Celebrate the YES! 💍');
+    });
+  </script>
+</body>
+</html>
